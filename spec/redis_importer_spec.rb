@@ -3,8 +3,9 @@ require_relative '../test/lib/person.rb'
 
 describe RedisImporter do
   before(:all) do
-    Bucket.create('spec_tests')
-    @bucket = Bucket.find('spec_tests')
+    bucket_name = S3_CREDENTIALS['bucket']
+    Bucket.create(bucket_name)
+    @bucket = Bucket.find(bucket_name)
 
     @test_csv_files = Dir.glob("test/csv/*.csv")
     @test_class_names = @test_csv_files.map {|f| File.basename(f).gsub('.csv','').capitalize}
@@ -12,7 +13,7 @@ describe RedisImporter do
     @test_csv_files.each do |file_path|
       filename = File.basename(file_path)
       file = File.open(file_path)
-      S3Object.store(filename,file,'spec_tests')
+      S3Object.store(filename,file,bucket_name)
     end
   end
 
