@@ -3,6 +3,9 @@ require_relative '../test/lib/person.rb'
 
 describe RedisImporter do
   before(:all) do
+    S3_CREDENTIALS = YAML.load_file(File.open('config/s3_credentials.yml'))['development']
+    $connection = AWS::S3::Base.establish_connection! S3_CREDENTIALS['connection']
+
     bucket_name = S3_CREDENTIALS['bucket']
     Bucket.create(bucket_name)
     @bucket = Bucket.find(bucket_name)

@@ -5,8 +5,8 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Ian Whitney"]
   gem.email         = ["ian@ianwhitney.com"]
   gem.description   = %q{Creates objects, converts them to Redis commands and executes the redis commands.}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.summary       = %q{Creates objects, converts them to Redis commands and executes the redis commands.}
+  gem.homepage      = "https://github.com/SeniorServiceAmerica/redis_importer"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }

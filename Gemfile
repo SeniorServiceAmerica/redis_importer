@@ -4,4 +4,3 @@ source 'https://rubygems.org'
 gemspec
 gem 'csv_to_object', :git => 'git://github.com/SeniorServiceAmerica/csv_to_object'
 gem 'redis_pipeline', :git => 'git://github.com/SeniorServiceAmerica/redis_pipeline'
-gem 'aws-s3'

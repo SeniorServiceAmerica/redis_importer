@@ -1,11 +1,12 @@
 require 'redis_importer/version'
-require 'bundler'
-Bundler.require
+
+# Requiring released gems defined 
+require 'aws/s3'
 include AWS::S3
 
-S3_CREDENTIALS = YAML.load_file(File.open('config/s3_credentials.yml'))['development']
-$connection = AWS::S3::Base.establish_connection! S3_CREDENTIALS['connection']
-$redis_uri = 'redis://localhost:6379'
+# Requiring unreleased gems
+require 'bundler'
+Bundler.require
 
 module RedisImporter
   class RedisImporter
@@ -46,7 +47,7 @@ module RedisImporter
     
     def pipeline
       if @commands && !@commands.empty?
-        pipeline = RedisPipeline::RedisPipeline.new($redis_uri)
+        pipeline = RedisPipeline::RedisPipeline.new
         pipeline.add_commands(@commands.flatten)
         pipeline.execute_commands
       end
