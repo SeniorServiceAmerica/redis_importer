@@ -19,4 +19,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency('csv_to_object')
   gem.add_dependency('redis_pipeline')
   gem.add_dependency('aws-s3')
+  gem.add_dependency('active_support')
 end
