@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.version       = RedisImporter::VERSION
 
   gem.add_development_dependency "rspec"
+  gem.add_dependency('gem_configurator')
   gem.add_dependency('csv_to_object')
   gem.add_dependency('redis_pipeline')
   gem.add_dependency('aws-s3')

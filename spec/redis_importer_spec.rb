@@ -31,7 +31,7 @@ describe RedisImporter do
   it "uses its storage method to get a file collection module" do
     @ri.collection.class.to_s.should == 'S3Collection'
   end
-
+  
   it "checks to see if each file is matched by a class in the system" do 
     @ri.should_receive(:class_exists?).twice
     @ri.import

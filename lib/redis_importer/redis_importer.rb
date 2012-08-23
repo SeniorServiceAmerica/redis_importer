@@ -1,11 +1,10 @@
 module RedisImporter
   class RedisImporter
+    include GemConfigurator
 
-    attr_reader :settings, :files
+    attr_reader :files
 
     attr_accessor :collection
-
-    DEFAULT_SETTINGS = {:storage_method => 's3'}
 
     def initialize
       configure
@@ -33,6 +32,10 @@ module RedisImporter
     def class_exists?(c)
       Object::const_defined?(c)
     end
+    
+    def default_settings
+      {:storage_method => 's3'}
+    end
 
     def get_objects
       CsvToObject::CsvToObject.new(local_path).to_objects
@@ -52,34 +55,5 @@ module RedisImporter
         pipeline.execute_commands
       end
     end
-    
-    
-    # Extract the below to a generic configuration module
-      # Module will need to include active_support/inflector
-    def config_path
-      config_file_name = "#{self.class.to_s.underscore}.yml"
-      if defined?(Rails) && File.exists?(Rails.root.join("config",config_file_name))
-        Rails.root.join("config",config_file_name)
-      else
-        nil
-      end
-    end
-    
-    def configure
-      raw_settings = parse_yaml(config_path())
-
-      if raw_settings
-        @settings = raw_settings[Rails.env]
-      else
-        @settings = {}          
-      end
-
-      @settings = DEFAULT_SETTINGS.merge(@settings)
-    end
-
-    def parse_yaml(path)
-      path ? YAML.load_file(path) : nil
-    end
-    # End configuration module
   end
 end
