@@ -1,0 +1,21 @@
+development: &defaults
+  connection:
+    :access_key_id: [your access key]
+    :secret_access_key: [your secret access key]
+    :use_ssl: true
+    # :persistent: true
+  bucket: [bucket name]
+  max_file_size: 10485760
+  acl: public-read
+
+test:
+  <<: *defaults
+  bucket: [bucket name]
+
+staging:
+  <<: *defaults
+  bucket: [bucket name]
+
+production:
+  <<: *defaults
+  bucket: [bucket name]

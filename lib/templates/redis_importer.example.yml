@@ -1,0 +1,18 @@
+#
+# Format:
+# 
+# <stage name>:
+#   uri: <redis uri, defaults to 'redis://localhost:6379'>
+#   pipeline_batch_size: <Number of commands to pipeline, defaults to 1000>
+
+development: &defaults
+  storage_method: 's3'
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+  
+production:
+  <<: *defaults
