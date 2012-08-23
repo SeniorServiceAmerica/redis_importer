@@ -8,7 +8,7 @@ module RedisImporter
 
     def initialize
       configure
-      self.collection = S3Collection.new
+      self.collection = Object::const_get("#{@settings[:storage_method].camelcase}Collection").new()
       
       self.files = self.collection.files
     end
