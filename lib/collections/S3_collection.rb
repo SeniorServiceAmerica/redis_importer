@@ -1,9 +1,9 @@
 class S3Collection
   def initialize
-    credentials = YAML.load_file(File.open('config/s3_credentials.yml'))['development']
-    connection = AWS::S3::Base.establish_connection! credentials['connection']
+    configuration = YAML.load_file(File.open('config/s3_config.yml'))['development']
+    connection = AWS::S3::Base.establish_connection! configuration['connection']
 
-    bucket_name = credentials['bucket']
+    bucket_name = configuration['bucket']
     Bucket.create(bucket_name)
     @bucket = Bucket.find(bucket_name)
   end
