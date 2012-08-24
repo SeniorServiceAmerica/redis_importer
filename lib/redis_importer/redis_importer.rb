@@ -15,10 +15,14 @@ module RedisImporter
     
     def import
       files.each do |file|
-        if class_exists?(file.to_class_name)
-          self.local_path = "tmp/#{file.name}"
-          file.save_to(local_path)
-          get_redis_commands
+        begin
+          if Module.const_get(file.to_class_name)
+            self.local_path = "tmp/#{file.name}"
+            file.save_to(local_path)
+            get_redis_commands
+          end
+        rescue NameError
+          nil
         end
       end
       pipeline
