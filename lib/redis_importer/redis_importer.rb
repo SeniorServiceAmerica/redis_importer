@@ -2,8 +2,7 @@ module RedisImporter
   class RedisImporter
     include GemConfigurator
 
-    attr_reader :files
-
+    attr_reader :files, :commands, :errors
     attr_accessor :collection
 
     def initialize
@@ -11,18 +10,16 @@ module RedisImporter
       self.collection = Object::const_get("#{@settings[:storage_method].camelcase}Collection").new()
       
       self.files = self.collection.files
+      self.commands = []
     end
     
     def import
       files.each do |file|
         begin
-          if Module.const_get(file.to_class_name)
-            self.local_path = "tmp/#{file.name}"
-            file.save_to(local_path)
-            get_redis_commands
-          end
+          convert_to_redis_commands(file) if class_exists?(file.to_class_name)
         rescue NameError
-          nil
+          @errors ||= []
+          @errors << "#{file.name} is not matched by a class #{file.to_class_name} in the system."
         end
       end
       pipeline
@@ -30,33 +27,43 @@ module RedisImporter
     
     private
 
-    attr_writer :files
-    attr_accessor :local_path
+    attr_writer :files, :commands
 
     def class_exists?(c)
-      Object::const_defined?(c)
-    end
-    
-    def default_settings
-      {:storage_method => 's3'}
+      Module.const_get(c)
     end
 
-    def get_objects
+    def convert_to_redis_commands(file)
+      local_path = local_storage_path(file)
+      file.save_to(local_path)
+      convert_objects_to_redis_commands(get_objects(local_path))
+    end
+
+    def default_settings
+      {:storage_method => 's3', :local_storage_directory => 'tmp'}
+    end
+
+    def get_objects(local_path)
       CsvToObject::CsvToObject.new(local_path).to_objects
     end
     
-    def get_redis_commands
-      @commands ||= []
-      get_objects.each do |obj|
-        @commands << obj.to_redis
+    def convert_objects_to_redis_commands(objects)
+      objects.each do |obj|
+        self.commands << obj.to_redis
       end
     end
     
+    def local_storage_path(file)
+      "#{@settings[:local_storage_directory]}/#{file.name}"
+    end
+
     def pipeline
-      if @commands && !@commands.empty?
+      if !self.commands.empty?
         pipeline = RedisPipeline::RedisPipeline.new
-        pipeline.add_commands(@commands.flatten)
+        pipeline.add_commands(self.commands.flatten)
         pipeline.execute_commands
+      else
+        self.commands
       end
     end
   end
