@@ -2,7 +2,9 @@ require 'redis_importer/version'
 
 # Requiring released gems defined 
 require 'aws/s3'
-require 'active_support/inflector'
+require 'gem_configurator'
+require 'csv_to_object'
+require 'redis_pipeline'
 include AWS::S3
 
 # Requiring unreleased gems
