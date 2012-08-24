@@ -10,7 +10,7 @@ describe RedisImporter do
   
     bucket_name = collection['bucket']
     Bucket.create(bucket_name)
-    bucket = Bucket.find(bucket_name)
+    @bucket = Bucket.find(bucket_name)
   
     test_csv_files = Dir.glob("test/csv/*.csv")
     test_class_names = test_csv_files.map {|f| File.basename(f).gsub('.csv','').capitalize}
@@ -20,7 +20,6 @@ describe RedisImporter do
       file = File.open(file_path)
       S3Object.store(filename,file,bucket_name)
     end
-    
   end
 
   before(:each) do
@@ -36,7 +35,7 @@ describe RedisImporter do
   end
   
   it "checks to see if each file is matched by a class in the system" do 
-    @ri.should_receive(:class_exists?).twice
+    @ri.should_receive(:class_exists?).exactly(@bucket.objects.count).times
     @ri.import
   end
   
