@@ -2,8 +2,8 @@
 require File.expand_path('../lib/redis_importer/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Ian Whitney"]
-  gem.email         = ["ian@ianwhitney.com"]
+  gem.authors       = ["Ian Whitney", "Davin Lagerroos"]
+  gem.email         = ["iwhitney@ssa-i.org", "dlagerroos@ssa-i.org"]
   gem.description   = %q{Creates objects, converts them to Redis commands and executes the redis commands.}
   gem.summary       = %q{Creates objects, converts them to Redis commands and executes the redis commands.}
   gem.homepage      = "https://github.com/SeniorServiceAmerica/redis_importer"
