@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency "rspec"
   gem.add_dependency('gem_configurator')
-  gem.add_dependency('csv_to_object')
+  gem.add_dependency('csv_to_object', '~> 0.0.3')
   gem.add_dependency('redis_pipeline')
   gem.add_dependency('aws-s3', '~> 0.6.3')
 end
