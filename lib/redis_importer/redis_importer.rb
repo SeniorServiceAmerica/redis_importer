@@ -17,6 +17,8 @@ module RedisImporter
       files.each do |file|
         begin
           convert_to_redis_commands(file) if class_exists?(file.to_class_name.to_sym)
+        rescue NoMethodError
+          add_errors($!)
         rescue NameError
           add_errors("#{file.name} is not matched by a class #{file.to_class_name} in the system.")
         end
