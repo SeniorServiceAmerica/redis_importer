@@ -41,7 +41,7 @@ describe RedisImporter do
   
   it "only passes files to csv_to_object that are matched by a class in the system" do
     @ri.import
-    @ri.errors.should == ["foo.csv is not matched by a class Foo in the system."]
+    @ri.errors.should include "foo.csv is not matched by a class Foo in the system."
   end
   
   it "passes the redis commands to the redis pipeline" do

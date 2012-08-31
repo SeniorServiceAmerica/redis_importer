@@ -16,10 +16,9 @@ module RedisImporter
     def import
       files.each do |file|
         begin
-          convert_to_redis_commands(file) if class_exists?(file.to_class_name)
+          convert_to_redis_commands(file) if class_exists?(file.to_class_name.to_sym)
         rescue NameError
-          @errors ||= []
-          @errors << "#{file.name} is not matched by a class #{file.to_class_name} in the system."
+          add_errors("#{file.name} is not matched by a class #{file.to_class_name} in the system.")
         end
       end
       pipeline
@@ -28,6 +27,11 @@ module RedisImporter
     private
 
     attr_writer :files, :commands
+
+    def add_errors(errors)
+      @errors ||= []
+      @errors << errors
+    end
 
     def class_exists?(c)
       Module.const_get(c)
@@ -61,7 +65,12 @@ module RedisImporter
       if !self.commands.empty?
         pipeline = RedisPipeline::RedisPipeline.new
         pipeline.add_commands(self.commands.flatten)
-        pipeline.execute_commands
+        if !pipeline.execute_commands
+          add_errors(pipeline.errors)
+          false
+        else
+          true
+        end
       else
         self.commands
       end

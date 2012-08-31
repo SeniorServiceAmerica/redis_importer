@@ -8,6 +8,6 @@ class Person
   end
   
   def to_redis()
-    ["hset person:#{self.id} first_name #{self.first_name}", "hset person:#{self.id} last_name #{self.last_name}"]
+    ["hset|person:#{self.id}|first_name|#{self.first_name}", "hset|person:#{self.id}|last_name|#{self.last_name}"]
   end
 end
