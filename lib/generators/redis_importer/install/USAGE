@@ -2,7 +2,7 @@ Description:
     Installs the necessary configuration files based upon your file storage type. Currently only supports the file storage type 's3'.
     
 Example:
-    rails generate redis_import s3
+    rails generate redis_importer:install s3
 
     This will create:
         config/redis_importer.yml

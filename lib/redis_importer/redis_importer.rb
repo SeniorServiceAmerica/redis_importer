@@ -5,6 +5,7 @@ module RedisImporter
     attr_reader :files, :commands, :errors
     attr_accessor :collection
 
+    # Instantiates and configures a RedisImporter object
     def initialize
       configure
       self.collection = Object::const_get("#{@settings[:storage_method].camelcase}Collection").new()
@@ -13,6 +14,7 @@ module RedisImporter
       self.commands = []
     end
     
+    # Converts each csv file in the collection to objects, which are then saved into the redis store.
     def import
       files.each do |file|
         begin

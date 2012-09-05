@@ -1,15 +1,17 @@
 module AWS
   module S3
+    # Methods extending the S3Object class provided by the aws-s3 gem.
     class S3Object
-      
-      def name
-        self.key
-      end
+      alias_method :name, :key
 
+      # Returns the class represented by the csv file.
+      #  person.csv => Person
       def to_class_name
         self.key.gsub('.csv','').capitalize
       end
 
+      # Copies the S3 Object to a local directory.
+      #   save_to('tmp/file.csv')
       def save_to(path)
         File.open(path,'w') do |file|
           S3Object.stream(self.key,self.bucket.name) do |chunk|
