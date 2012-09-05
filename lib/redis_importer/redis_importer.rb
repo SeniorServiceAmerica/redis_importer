@@ -66,8 +66,8 @@ module RedisImporter
     def pipeline
       if !self.commands.empty?
         pipeline = RedisPipeline::RedisPipeline.new
-        pipeline.add_commands(self.commands.flatten)
-        if !pipeline.execute_commands
+        pipeline.add_command(self.commands.flatten)
+        if !pipeline.execute
           add_errors(pipeline.errors)
           false
         else

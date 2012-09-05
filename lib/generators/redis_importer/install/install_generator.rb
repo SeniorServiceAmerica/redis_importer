@@ -6,7 +6,7 @@ module RedisImporter
 
       def generate_collection
         copy_file "redis_importer.example.yml", "config/redis_importer.yml"
-        file_basename = "#{file_storage_type.downcase}_config"
+        file_basename = "#{file_storage_type.downcase}_collection"
         copy_file "#{file_basename}.example.yml", "config/#{file_basename}.yml"
       end
     end

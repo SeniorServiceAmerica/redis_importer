@@ -27,7 +27,7 @@ Or install it yourself as:
     rails g redis_importer:install
     
 1. Edit config/redis_importer.yml to set your remote file-storage method and what directory should store local copies of the files during import.
-2. Edit config/s3_config.yml to set your access key, secret access key, bucket name, etc.
+2. Edit config/s3_collection.yml to set your access key, secret access key, bucket name, etc.
 
 **At this time only Amazon S3 is supported as a remote file-storage method.**
 

@@ -6,4 +6,4 @@ Example:
 
     This will create:
         config/redis_importer.yml
-        config/s3_config.yml
+        config/s3_collection.yml

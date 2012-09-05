@@ -6,7 +6,7 @@ describe RedisImporter do
   before(:all) do
     @configuration = YAML.load_file(File.open('config/redis_importer.yml'))['development']
 
-    collection = YAML.load_file(File.open('config/s3_config.yml'))['development']
+    collection = YAML.load_file(File.open('config/s3_collection.yml'))['development']
     connection = AWS::S3::Base.establish_connection! collection['connection']
   
     bucket_name = collection['bucket']
