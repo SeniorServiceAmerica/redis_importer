@@ -8,7 +8,7 @@ module RedisImporter
     # Instantiates and configures a RedisImporter object
     def initialize
       configure
-      self.collection = Object::const_get("#{@settings[:storage_method].camelcase}Collection").new()
+      self.collection = Object::const_get("#{@settings['storage_method'].camelcase}Collection").new()
       
       self.files = self.collection.files
       self.commands = []
@@ -62,7 +62,7 @@ module RedisImporter
     end
     
     def local_storage_path(file)
-      "#{@settings[:local_storage_directory]}/#{file.name}"
+      "#{@settings['local_storage_directory']}/#{file.name}"
     end
 
     def pipeline
