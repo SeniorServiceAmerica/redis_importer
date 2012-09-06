@@ -48,7 +48,7 @@ module RedisImporter
     end
 
     def default_settings
-      {:storage_method => 's3', :local_storage_directory => 'tmp'}
+      {'storage_method' => 's3', 'local_storage_directory' => 'tmp'}
     end
 
     def get_objects(local_path)
