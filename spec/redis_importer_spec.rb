@@ -12,10 +12,10 @@ describe RedisImporter do
     bucket_name = collection['bucket']
     Bucket.create(bucket_name)
     @bucket = Bucket.find(bucket_name)
-  
+
     test_csv_files = Dir.glob("test/csv/*.csv")
     test_class_names = test_csv_files.map {|f| File.basename(f).gsub('.csv','').capitalize}
-  
+      
     test_csv_files.each do |file_path|
       filename = File.basename(file_path)
       file = File.open(file_path)
@@ -28,7 +28,7 @@ describe RedisImporter do
   end
 
   it "determines its file storage type from a configuration file" do
-    @ri.settings[:storage_method].should == @configuration['storage_method']
+    @ri.settings['storage_method'].should == @configuration['storage_method']
   end
   
   it "uses its storage method to get a file collection module" do
