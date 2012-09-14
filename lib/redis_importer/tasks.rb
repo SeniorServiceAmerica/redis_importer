@@ -8,8 +8,9 @@ namespace :redis_importer do
   desc 'Run import'
   task 'import' => :environment do
     ri = RedisImporter::RedisImporter.new
-    ri.import
-    result = ri.errors
-    puts "test: #{result}"
+
+    if !ri.import
+      fail "#{ri.errors}"
+    end
   end
 end
