@@ -1,4 +1,5 @@
 require 'redis_importer/version'
+require 'redis_importer/railtie' if defined?(Rails)
 
 # Requiring unreleased gems
 require 'bundler'
