@@ -61,7 +61,7 @@ module RedisImporter
         begin
           self.commands << obj.to_redis
         rescue => details
-          run_pipeline = false
+          self.run_pipeline = false
           add_errors("#{obj.inspect} could not be serialized to redis: " + details.to_s)
         end
       end
