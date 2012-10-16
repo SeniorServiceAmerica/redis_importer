@@ -13,6 +13,7 @@ module RedisImporter
       self.files = self.collection.files
       self.errors = []
       self.commands = []
+      self.run_pipeline = true
     end
     
     # Converts each csv file in the collection to objects, which are then saved into the redis store.
@@ -27,11 +28,12 @@ module RedisImporter
         end
       end
 
-      pipeline if !@prevent_pipeline
+      pipeline
     end
   
     private
 
+    attr_accessor :run_pipeline
     attr_writer :files, :commands, :errors
 
     def add_errors(errors)
@@ -58,9 +60,9 @@ module RedisImporter
       objects.each do |obj|
         begin
           self.commands << obj.to_redis
-        rescue
-          @prevent_pipeline = true
-          add_errors($!)
+        rescue => details
+          run_pipeline = false
+          add_errors("#{obj.inspect} could not be serialized to redis: " + details.to_s)
         end
       end
     end
@@ -68,9 +70,9 @@ module RedisImporter
     def local_storage_path(file)
       "#{@settings['local_storage_directory']}/#{file.name}"
     end
-
+    
     def pipeline
-      if !self.commands.empty?
+      if run_pipeline?
         pipeline = RedisPipeline::RedisPipeline.new
         pipeline.add_command(self.commands.flatten)
         if !pipeline.execute
@@ -80,9 +82,12 @@ module RedisImporter
           true
         end
       else
-        add_errors("No commands")
         false
       end
+    end
+    
+    def run_pipeline?
+      run_pipeline
     end
     
     def save_remote_file_locally(file)
