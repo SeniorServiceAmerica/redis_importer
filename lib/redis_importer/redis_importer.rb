@@ -11,30 +11,31 @@ module RedisImporter
       self.collection = Object::const_get("#{@settings['storage_method'].camelcase}Collection").new()
       
       self.files = self.collection.files
+      self.errors = []
       self.commands = []
     end
     
     # Converts each csv file in the collection to objects, which are then saved into the redis store.
     def import
       files.each do |file|
+        save_remote_file_locally(file)
         begin
           convert_to_redis_commands(file) if class_exists?(file.to_class_name.to_sym)
-        rescue NoMethodError
-          add_errors($!)
         rescue NameError
           add_errors("#{file.name} is not matched by a class #{file.to_class_name} in the system.")
+          add_errors($!)
         end
       end
-      pipeline
+
+      pipeline if !@prevent_pipeline
     end
-    
+  
     private
 
-    attr_writer :files, :commands
+    attr_writer :files, :commands, :errors
 
     def add_errors(errors)
-      @errors ||= []
-      @errors << errors
+      self.errors << errors
     end
 
     def class_exists?(c)
@@ -42,9 +43,7 @@ module RedisImporter
     end
 
     def convert_to_redis_commands(file)
-      local_path = local_storage_path(file)
-      file.save_to(local_path)
-      convert_objects_to_redis_commands(get_objects(local_path))
+      convert_objects_to_redis_commands(get_objects(local_storage_path(file)))
     end
 
     def default_settings
@@ -57,7 +56,12 @@ module RedisImporter
     
     def convert_objects_to_redis_commands(objects)
       objects.each do |obj|
-        self.commands << obj.to_redis
+        begin
+          self.commands << obj.to_redis
+        rescue
+          @prevent_pipeline = true
+          add_errors($!)
+        end
       end
     end
     
@@ -76,8 +80,13 @@ module RedisImporter
           true
         end
       else
-        self.commands
+        add_errors("No commands")
+        false
       end
+    end
+    
+    def save_remote_file_locally(file)
+      file.save_to(local_storage_path(file))
     end
   end
 end
