@@ -1,5 +1,6 @@
 require "spec_helper"
 require 'redis_backed_model'
+require 'yaml'
 require_relative '../test/lib/person.rb'
 
 describe RedisImporter do
