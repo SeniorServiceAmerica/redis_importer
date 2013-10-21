@@ -11,8 +11,9 @@ module AWS
           @s3.to_class_name.should_not include('.csv')
         end
         it "capitalizes the name" do
-          @s3.stub(:key).and_return('something.csv')
-          @s3.to_class_name.should eq 'Something'
+          @s3.stub(:key).and_return('lowercase.csv')
+          @s3.to_class_name.start_with?('l').should eq false
+          @s3.to_class_name.start_with?('L').should eq true
         end
         it "converts snake_case to CamelCase" do
           @s3.stub(:key).and_return('multi_word_class.csv')
