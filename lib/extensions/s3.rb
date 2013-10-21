@@ -7,7 +7,7 @@ module AWS
       # Returns the class represented by the csv file.
       #  person.csv => Person
       def to_class_name
-        self.key.gsub('.csv','').capitalize
+        self.key.gsub('.csv','').split('_').map { |word| word.capitalize}.join
       end
 
       # Copies the S3 Object to a local directory.
